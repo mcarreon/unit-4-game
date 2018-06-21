@@ -143,13 +143,13 @@ var gameCtrl = {
     userAttack: function () {
         if (user.pickedHero.alive) {
             gameVar.currentDefender.health -= user.pickedHero.ap;
-            $('.dialog').text('You did: ' + user.pickedHero.ap);
+            $('.dialog').text('You did ' + user.pickedHero.ap + ' damage!');
             if (gameVar.currentDefender.health > 0) {
 
                 $('.defender .card-subtitle').text(gameVar.currentDefender.health);
 
                 user.pickedHero.health -= gameVar.currentDefender.counterAP;
-
+                $('.enemy-dialog').text( gameVar.currentDefender.name + ' did ' + gameVar.currentDefender.counterAP + ' damage!');
                 if (user.pickedHero.health > 0) {
                     $('.hero .card-subtitle').text(user.pickedHero.health);
                 } 
@@ -163,6 +163,8 @@ var gameCtrl = {
             else {
                 gameVar.currentDefender.health = 0;
                 $('.defender .card-subtitle').text(gameVar.currentDefender.health);
+                $('.dialog').text('You defeated ' + gameVar.currentDefender.name + '.');
+                $('.enemy-dialog').text('');
                 gameVar.currentDefender.alive = false;
             }
             user.pickedHero.ap += user.pickedHero.baseAP;
@@ -219,6 +221,10 @@ var gameVar = {
 
 };
 
+
+
+
+
 $('.user-char-list').on('click', '.char', function () {
     if (!user.hasPicked) {
         gameCtrl.setUp(this);
@@ -248,7 +254,9 @@ $('.arena').on('click', '.attack-btn', function () {
     gameCtrl.gameOver();
 });
 
+$('reset.btn').on('click', function () {
 
+});
 
 function test() {
     console.log(user);
