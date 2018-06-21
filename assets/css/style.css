@@ -1,0 +1,61 @@
+
+.flexbox {
+    display: flex;
+    align-items: center;
+    background-color: rgb(93, 109, 126);
+    height: 100vh;
+}
+
+.arena {
+    width: 50%;
+    height: 80%;
+    background-color: white;
+    border: 1px solid whitesmoke;
+    padding: 0px;
+    border-radius: 1%;
+    min-height: 95vh;
+}
+
+.enemy-char-list > .char {
+    border-color: red;
+}
+
+.enemy-battle-zone > .char {
+    border-color: darkred;
+}
+
+.dialog {
+    position: absolute;
+    float: left;
+    padding: 20px;
+    bottom: 30%;
+    left: 31.5%;
+}
+
+.enemy-dialog {
+    position: absolute;
+    padding: 20px;
+    bottom: 30%;
+    left: 63%;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+
+.char {
+    margin: 20px;
+    width: 200px;
+}
+
+.attack-btn {
+    margin: auto;
+    display: block;
+}
