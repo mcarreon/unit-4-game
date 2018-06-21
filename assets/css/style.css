@@ -30,12 +30,7 @@
     padding: 20px;
     bottom: 30%;
     left: 27%;
-}
-
-.reset-btn {
-    position: absolute;
-    bottom: 0px;
-    color: rgb(235, 235, 235);
+    width: 220px;
 }
 
 .enemy-dialog {
@@ -43,6 +38,13 @@
     padding: 20px;
     bottom: 30%;
     left: 59%;
+    width: 220px;
+}
+
+.reset-btn {
+    position: absolute;
+    bottom: 0px;
+    color: rgb(235, 235, 235);
 }
 
 .flex-row {

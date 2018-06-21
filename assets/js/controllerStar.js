@@ -5,9 +5,6 @@ var user = {
 };
 //controls game function
 var gameCtrl = {
-    cardbody: function () {
-
-    },
     setUp: function (element) {
         //sets user hero
         var pick = $(element).attr('value');
@@ -15,31 +12,7 @@ var gameCtrl = {
         user.hasPicked = true;
 
         //moves user hero to char slot, 
-        var card = $('<div>');
-        card.addClass('hero char card');
-
-        var cardBody = $('<div>');
-        cardBody.addClass('card-body');
-
-        var cardImg = $('<img>');
-        cardImg.attr('src', gameVar.availChar[pick].img);
-
-        var cardHealth = $('<div>');
-        cardHealth.addClass('card-subtitle');
-        cardHealth.text(user.pickedHero.health);
-
-        var hero = $('<div>');
-        hero.addClass('card-title');
-        hero.text(user.pickedHero.name);
-
-        cardBody.append(cardImg);
-        $('.user-char-slot').append(
-            card.append(
-                cardBody.append(hero)
-            )
-        );
-        cardBody.append(cardHealth);
-
+        gameCtrl.createCard('hero', pick);
 
         //inserts attack button
         $('.user-char-slot').before('<button class="attack-btn btn-outline-danger btn">Attack</button>');
@@ -52,25 +25,84 @@ var gameCtrl = {
         }
         //moves enemy list to enemy dugout
         for (var i = 0; i < gameVar.enemyList.length; i++) {
-            var card = $('<div>')
-            card.addClass('char card ');
+            gameCtrl.createCard('enemyTeam', i);
+        }
+        //removes available characters list
+        $('.user-char-list').empty();
+        $('h1').text('Pick Your Opponent');
+    },
+    createCard: function (type, index) {
+        var card = $('<div>');
+        card.addClass('char card');
+        var cardBody = $('<div>');
+        cardBody.addClass('card-body');
+        var cardImg = $('<img>');
+        var cardHealth = $('<div>');
+        cardHealth.addClass('card-subtitle');
+
+        if (type === 'initial') {
+            card.attr("value", index);
+            cardImg.attr('src', gameVar.availChar[index].img);
+            cardImg.addClass('card-image-top');
+            var initial = $('<div>');
+            initial.addClass('card-title');
+            initial.text(gameVar.availChar[index].name);
+            cardHealth.text(gameVar.availChar[index].health);
+
+            cardBody.append(cardImg);
+            $('.user-char-list').append(
+                card.append(
+                    cardBody.append(initial)
+                )
+            );
+            cardBody.append(cardHealth);
+
+        }
+        else if (type === 'defender') {
+            card.addClass('defender');
+            cardImg.attr('src', gameVar.currentDefender.img);
+            cardHealth.text(gameVar.currentDefender.health);
+    
+            var defender = $('<div>');
+            defender.addClass('card-title');
+            defender.text(gameVar.enemyList[index].name);
+    
+            cardBody.append(cardImg);
+            $('.enemy-battle-zone').append(
+                card.append(
+                    cardBody.append(defender)
+                )
+            );
+            cardBody.append(cardHealth);
+        }
+        else if (type === 'hero') {
+            card.addClass('hero');
+            cardImg.attr('src', gameVar.availChar[index].img);
+            cardHealth.text(user.pickedHero.health);
+    
+            var hero = $('<div>');
+            hero.addClass('card-title');
+            hero.text(user.pickedHero.name);
+    
+            cardBody.append(cardImg);
+            $('.user-char-slot').append(
+                card.append(
+                    cardBody.append(hero)
+                )
+            );
+            cardBody.append(cardHealth);
+        }
+        else if (type === 'enemyTeam') {
             card.attr({
-                value: i
+                value: index
             });
-
-            var cardBody = $('<div>');
-            cardBody.addClass('card-body');
-
-            var cardImg = $('<img>');
-            cardImg.attr('src', gameVar.enemyList[i].img);
-
-            var cardHealth = $('<div>');
-            cardHealth.addClass('card-subtitle def-index' + i);
-            cardHealth.text(gameVar.enemyList[i].health);
+            cardImg.attr('src', gameVar.enemyList[index].img);
+            cardHealth.addClass('def-index' + index);
+            cardHealth.text(gameVar.enemyList[index].health);
 
             var enemy = $('<div>');
             enemy.addClass('card-title');
-            enemy.text(gameVar.enemyList[i].name);
+            enemy.text(gameVar.enemyList[index].name);
 
             cardBody.append(cardImg);
             $('.enemy-char-list').append(
@@ -79,38 +111,12 @@ var gameCtrl = {
                 )
             );
             cardBody.append(cardHealth);
-
         }
-        //removes available characters list
-        $('.user-char-list').empty();
-        $('h1').text('Pick Your Opponent');
     },
     moveDefender: function (element, index) {
         gameVar.currentDefender = gameVar.enemyList[index];
-        var card = $('<div>')
-        card.addClass('defender char card');
-
-        var cardBody = $('<div>');
-        cardBody.addClass('card-body');
-
-        var cardImg = $('<img>');
-        cardImg.attr('src', gameVar.currentDefender.img);
-
-        var cardHealth = $('<div>');
-        cardHealth.addClass('card-subtitle');
-        cardHealth.text(gameVar.currentDefender.health);
-
-        var defender = $('<div>');
-        defender.addClass('card-title');
-        defender.text(gameVar.enemyList[index].name);
-
-        cardBody.append(cardImg);
-        $('.enemy-battle-zone').append(
-            card.append(
-                cardBody.append(defender)
-            )
-        );
-        cardBody.append(cardHealth);
+        
+        gameCtrl.createCard('defender', index);
 
         gameVar.defenderPres = true;
 
@@ -169,6 +175,32 @@ var gameCtrl = {
             }
             user.pickedHero.ap += user.pickedHero.baseAP;
         }
+    },
+    resetGame: function () {
+        //resets display
+        $('h1').text('Pick Your Character');
+        $('.user-char-list').empty();
+        $('.enemy-char-list').empty();
+        $('.enemy-battle-zone').empty();
+        $('.user-char-slot').empty();
+        $('.dialog').text('');
+        $('.enemy-dialog').text('');
+        $('.attack-btn').remove();
+
+        //repopulates avail characters
+        for (var i = 0; i < gameVar.availChar.length; i++) {
+            gameVar.availChar[i].health = gameVar.availChar[i].baseVals[0];
+            gameVar.availChar[i].ap = gameVar.availChar[i].baseVals[1];
+            gameCtrl.createCard('initial', i);
+        }
+
+        user.pickedHero = {};
+        user.hasPicked = false;
+        gameVar.defenderPres = false;
+        gameVar.enemyList = [];
+        gameVar.curDefenderIndex = null;
+        gameVar.currentDefender = {};
+        
     }
 
 };
@@ -177,6 +209,7 @@ var gameVar = {
     availChar: [
         obiWan = {
             name: 'Obi-Wan Kenobi',
+            baseVals: [120, 6],
             health: 120,
             ap: 6,
             baseAP: 6,
@@ -187,6 +220,7 @@ var gameVar = {
         },
         luke = {
             name: 'Luke Skywalker',
+            baseVals: [100, 8],
             health: 100,
             ap: 8,
             baseAP: 8,
@@ -196,6 +230,7 @@ var gameVar = {
         },
         mace = {
             name: 'Mace Windu',
+            baseVals: [150, 5],
             health: 150,
             ap: 5,
             baseAP: 5,
@@ -205,9 +240,10 @@ var gameVar = {
         },
         darth = {
             name: 'Darth Maul',
+            baseVals: [180, 2],
             health: 180,
-            ap: 3,
-            baseAP: 3,
+            ap: 2,
+            baseAP: 2,
             counterAP: 14,
             alive: true,
             img: 'assets/images/maul.jpg'
@@ -221,9 +257,11 @@ var gameVar = {
 
 };
 
-
-
-
+$(document).ready(function() {
+    for (var i = 0; i < gameVar.availChar.length; i++) {
+        gameCtrl.createCard('initial', i);
+    }
+});
 
 $('.user-char-list').on('click', '.char', function () {
     if (!user.hasPicked) {
@@ -254,8 +292,8 @@ $('.arena').on('click', '.attack-btn', function () {
     gameCtrl.gameOver();
 });
 
-$('reset.btn').on('click', function () {
-
+$('.reset-btn').on('click', function () {
+    gameCtrl.resetGame();
 });
 
 function test() {
