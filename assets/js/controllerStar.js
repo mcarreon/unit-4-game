@@ -5,6 +5,7 @@ var user = {
 };
 //controls game function
 var gameCtrl = {
+    //sets up game board
     setUp: function (element) {
         //sets user hero
         var pick = $(element).attr('value');
@@ -31,6 +32,7 @@ var gameCtrl = {
         $('.user-char-list').empty();
         $('h1').text('Pick Your Opponent');
     },
+    //templates for creating cards to append, kind of messy
     createCard: function (type, index) {
         var card = $('<div>');
         card.addClass('char card');
@@ -113,6 +115,7 @@ var gameCtrl = {
             cardBody.append(cardHealth);
         }
     },
+    //moves defender into position
     moveDefender: function (element, index) {
         gameVar.currentDefender = gameVar.enemyList[index];
         
@@ -123,6 +126,7 @@ var gameCtrl = {
         $(element).fadeTo("slow", 0.5);
         $('h1').text('Fight!');
     },
+    //resets the defender slot
     resetDefender: function () {
         var dummy = '.def-index' + gameVar.curDefenderIndex;
         $(dummy).text(0);
@@ -130,6 +134,7 @@ var gameCtrl = {
         $('.enemy-battle-zone').empty();
         $('h1').text('Pick Next Enemy');
     },
+    //handles game over 
     gameOver: function () {
         if (user.pickedHero.alive) {
             var enemiesAlive = false;
@@ -146,6 +151,7 @@ var gameCtrl = {
         }
 
     },
+    //logic for user attacking and enemy counter attack
     userAttack: function () {
         if (user.pickedHero.alive) {
             gameVar.currentDefender.health -= user.pickedHero.ap;
@@ -176,6 +182,7 @@ var gameCtrl = {
             user.pickedHero.ap += user.pickedHero.baseAP;
         }
     },
+    //resets the game for another round
     resetGame: function () {
         //resets display
         $('h1').text('Pick Your Character');
