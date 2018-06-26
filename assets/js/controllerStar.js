@@ -191,6 +191,7 @@ var gameCtrl = {
         for (var i = 0; i < gameVar.availChar.length; i++) {
             gameVar.availChar[i].health = gameVar.availChar[i].baseVals[0];
             gameVar.availChar[i].ap = gameVar.availChar[i].baseVals[1];
+            gameVar.availChar[i].alive = true;
             gameCtrl.createCard('initial', i);
         }
 
